@@ -11,4 +11,4 @@
 
 目前状态：
 
-<img src="https://images.xzonn.top/status.svg" alt="目前状态" width="200" height="50" />
+<img src="Status.svg" alt="目前状态" width="200" height="50" />
