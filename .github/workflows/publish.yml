@@ -4,26 +4,33 @@ on:
   push:
     branches: 
       - master
-  pull_request:
-    branches: 
-      - master
+    paths-ignore:
+      - '*.md'
+      - '**/.gitignore'
+
+concurrency:
+  group: build
+  cancel-in-progress: true
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache Ossutil
       id: cache-ossutil
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ossutil64
-        key: ${{ runner.os }}-ossutil64-1.7.7
+        key: ${{ runner.os }}-ossutil64-1.7.19
       continue-on-error: true
     - name: Get Ossutil
       if: steps.cache-ossutil.outputs.cache-hit != 'true'
       run: |
-        wget -q http://gosspublic.alicdn.com/ossutil/1.7.7/ossutil64
+        apt-get update && apt-get install -y wget unzip
+        wget -q https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-linux-amd64.zip
+        unzip -q ossutil-v1.7.19-linux-amd64.zip
+        mv ossutil-v1.7.19-linux-amd64/ossutil64 ossutil64
     - name: Config Ossutil
       run: |
         chmod +x ossutil64
